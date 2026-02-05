@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Icaru Downloader - YouTube Video & Audio Downloader</title>
+    <meta name="description" content="Download YouTube videos in HD, Full HD, 4K quality. Convert YouTube to MP3, MP4, WEBM. Fast, free, no registration required.">
+    <meta name="keywords" content="youtube downloader, youtube to mp3, youtube to mp4, video downloader, audio downloader">
+    <meta name="author" content="Icaru Team">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Icaru Downloader - YouTube Video & Audio Downloader">
+    <meta property="og:description" content="Download YouTube videos in HD, Full HD, 4K quality. Convert YouTube to MP3, MP4, WEBM.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://icarru.vercel.app">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/public/images/favicon.ico">
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/public/css/style.css">
+    <link rel="stylesheet" href="/public/css/responsive.css">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/public/manifest.json">
+    
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#6d28d9">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" href="/public/images/logo.png">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Loading Icaru Downloader...</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <!-- Logo -->
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Icaru</h1>
+                        <span class="logo-subtitle">Downloader</span>
+                    </div>
+                </div>
+
+                <!-- Navigation Menu -->
+                <div class="nav-menu">
+                    <a href="#" class="nav-link active" data-page="home">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="#" class="nav-link" data-page="search">
+                        <i class="fas fa-search"></i> Search
+                    </a>
+                    <a href="#" class="nav-link" data-page="formats">
+                        <i class="fas fa-file-video"></i> Formats
+                    </a>
+                    <a href="#" class="nav-link" data-page="about">
+                        <i class="fas fa-info-circle"></i> About
+                    </a>
+                </div>
+
+                <!-- Theme Toggle -->
+                <div class="theme-toggle">
+                    <button id="themeToggle" class="theme-btn">
+                        <i class="fas fa-moon"></i>
+                        <span>Dark</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="homePage">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h2 class="hero-title">
+                    Download <span class="gradient-text">YouTube Videos</span> 
+                    in Highest Quality
+                </h2>
+                <p class="hero-subtitle">
+                    Free YouTube video downloader. Download videos in MP4, WEBM, 3GP, 
+                    and convert to MP3 with high quality.
+                </p>
+                
+                <!-- URL Input -->
+                <div class="url-input-section">
+                    <div class="input-group">
+                        <div class="input-icon">
+                            <i class="fab fa-youtube"></i>
+                        </div>
+                        <input 
+                            type="url" 
+                            id="videoUrl" 
+                            placeholder="Paste YouTube URL here..."
+                            autocomplete="off"
+                            spellcheck="false"
+                        >
+                        <button id="pasteBtn" class="paste-btn" title="Paste from clipboard">
+                            <i class="fas fa-paste"></i>
+                        </button>
+                    </div>
+                    <div class="input-actions">
+                        <button id="analyzeBtn" class="btn-primary">
+                            <i class="fas fa-magic"></i> Analyze & Download
+                        </button>
+                        <button id="searchToggle" class="btn-secondary">
+                            <i class="fas fa-search"></i> Search Videos
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Features -->
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Fast Download</h4>
+                            <p>High-speed download servers</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-hd"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>HD Quality</h4>
+                            <p>Up to 4K resolution</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Safe & Secure</h4>
+                            <p>No malware, 100% clean</p>
+                        </div>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4>Unlimited</h4>
+                            <p>No download limits</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Hero Image -->
+            <div class="hero-image">
+                <div class="hero-card">
+                    <div class="card-header">
+                        <div class="card-thumbnail">
+                            <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="YouTube Video">
+                            <div class="duration-badge">3:45</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h4>Example Video Title</h4>
+                        <p>YouTube Channel • 1.2M views</p>
+                        
+                        <div class="format-options">
+                            <div class="format-badge">MP4 1080p</div>
+                            <div class="format-badge">MP3 320kbps</div>
+                            <div class="format-badge">WEBM 720p</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section (Hidden by default) -->
+    <section class="search-section" id="searchPage" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-search"></i> Search YouTube Videos</h2>
+                <p>Find and download videos directly</p>
+            </div>
+            
+            <div class="search-box">
+                <div class="search-input-group">
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="What do you want to download? (music, tutorial, etc.)"
+                        autocomplete="off"
+                    >
+                    <button id="searchBtn" class="btn-primary">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                
+                <div class="search-filters">
+                    <div class="filter-group">
+                        <label for="searchLimit">Results:</label>
+                        <select id="searchLimit" class="filter-select">
+                            <option value="10">10 videos</option>
+                            <option value="20" selected>20 videos</option>
+                            <option value="30">30 videos</option>
+                            <option value="50">50 videos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="searchSort">Sort by:</label>
+                        <select id="searchSort" class="filter-select">
+                            <option value="relevance">Relevance</option>
+                            <option value="date">Upload date</option>
+                            <option value="viewCount">View count</option>
+                            <option value="rating">Rating</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="search-results">
+                <div id="resultsContainer" class="results-grid">
+                    <!-- Results will be loaded here -->
+                </div>
+                
+                <div id="loadingResults" class="loading-results" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Searching YouTube...</p>
+                </div>
+                
+                <div id="noResults" class="no-results" style="display: none;">
+                    <i class="fas fa-search"></i>
+                    <h3>No videos found</h3>
+                    <p>Try a different search term</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Formats Section -->
+    <section class="formats-section" id="formatsPage" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-file-video"></i> Available Formats</h2>
+                <p>Supported video and audio formats</p>
+            </div>
+            
+            <div class="formats-grid">
+                <!-- Video Formats -->
+                <div class="format-category">
+                    <h3><i class="fas fa-video"></i> Video Formats</h3>
+                    <div class="format-list">
+                        <div class="format-item">
+                            <div class="format-icon">
+                                <i class="fas fa-film"></i>
+                            </div>
+                            <div class="format-details">
+                                <h4>MP4</h4>
+                                <p>Standard video format</p>
+                                <span class="format-quality">144p to 4K</span>
+                            </div>
+                        </div>
+                        
+                        <div class="format-item">
+                            <div class="format-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div class="format-details">
+                                <h4>WEBM</h4>
+                                <p>Web optimized format</p>
+                                <span class="format-quality">360p to 1080p</span>
+                            </div>
+                        </div>
+                        
+                        <div class="format-item">
+                            <div class="format-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="format-details">
+                                <h4>3GP</h4>
+                                <p>Mobile format</p>
+                                <span class="format-quality">144p to 480p</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Audio Formats -->
+                <div class="format-category">
+                    <h3><i class="fas fa-music"></i> Audio Formats</h3>
+                    <div class="format-list">
+                        <div class="format-item">
+                            <div class="format-icon">
+                                <i class="fas fa-file-audio"></i>
+                            </div>
+                            <div class="format-details">
+                                <h4>MP3</h4>
+                                <p>Most popular audio</p>
+                                <span class="format-quality">64kbps to 320kbps</span>
+                            </div>
+                        </div>
+                        
+                        <div class="format-item">
+                            <div class="format-icon">
+                                <i class="fas fa-headphones"></i>
+                            </div>
+                            <div class="format-details">
+                                <h4>M4A</h4>
+                                <p>High quality audio</p>
+                                <span class="format-quality">128kbps to 256kbps</span>
+                            </div>
+                        </div>
+                        
+                        <div class="format-item">
+                            <div class="format-icon">
+                                <i class="fas fa-wave-square"></i>
+                            </div>
+                            <div class="format-details">
+                                <h4>OPUS</h4>
+                                <p>Modern audio codec</p>
+                                <span class="format-quality">Up to 512kbps</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="aboutPage" style="display: none;">
+        <div class="container">
+            <div class="section-header">
+                <h2><i class="fas fa-info-circle"></i> About Icaru Downloader</h2>
+                <p>Fast, Free & Unlimited YouTube Downloader</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-card">
+                    <div class="about-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Our Mission</h3>
+                    <p>
+                        Provide a fast, reliable, and user-friendly platform 
+                        for downloading YouTube videos and audio in various formats 
+                        and qualities.
+                    </p>
+                </div>
+                
+                <div class="about-card">
+                    <div class="about-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Safe & Secure</h3>
+                    <p>
+                        We don't store any videos or personal data. 
+                        All downloads are processed in real-time directly 
+                        from YouTube servers.
+                    </p>
+                </div>
+                
+                <div class="about-card">
+                    <div class="about-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Multi-Platform</h3>
+                    <p>
+                        Works on Windows, Mac, Linux, Android, and iOS. 
+                        No software installation required. Use directly in your browser.
+                    </p>
+                </div>
+                
+                <div class="about-card">
+                    <div class="about-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Open Source</h3>
+                    <p>
+                        Icaru Downloader is built with modern web technologies 
+                        and is available as an open-source project.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Info Modal -->
+    <div id="videoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Download Video</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Video info will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notificationContainer"></div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-download"></i>
+                        <h3>Icaru Downloader</h3>
+                    </div>
+                    <p>
+                        Free YouTube video downloader. Download videos in MP4, 
+                        WEBM, 3GP, and convert to MP3 with high quality.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <a href="#" data-page="home">Home</a>
+                    <a href="#" data-page="search">Search</a>
+                    <a href="#" data-page="formats">Formats</a>
+                    <a href="#" data-page="about">About</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <a href="#" id="termsBtn">Terms of Service</a>
+                    <a href="#" id="privacyBtn">Privacy Policy</a>
+                    <a href="#" id="disclaimerBtn">Disclaimer</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                        <a href="#" class="social-link">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Icaru Downloader. All rights reserved.</p>
+                <p class="footer-note">
+                    Disclaimer: This tool is for educational purposes only. 
+                    Please respect copyright laws.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/public/js/utils.js"></script>
+    <script src="/public/js/main.js"></script>
+</body>
+</html>
