@@ -720,4 +720,329 @@ class IcaruDownloader {
                 font-size: 0.75rem;
                 color: var(--text-tertiary);
                 background: var(--bg-tertiary);
-                padding
+                padding: 2px 6px;
+                border-radius: var(--radius-sm);
+            }
+            
+            .format-details {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .format-itag {
+                font-size: 0.75rem;
+                color: var(--text-tertiary);
+            }
+            
+            .video-actions {
+                display: flex;
+                gap: var(--spacing-md);
+                justify-content: center;
+                padding-top: var(--spacing-lg);
+                border-top: 1px solid var(--border-color);
+            }
+            
+            @media (max-width: 768px) {
+                .formats-grid {
+                    grid-template-columns: 1fr;
+                }
+                
+                .video-meta-large {
+                    flex-direction: column;
+                    gap: var(--spacing-xs);
+                }
+            }
+        `;
+        
+        document.head.appendChild(style);
+    }
+
+    /**
+     * Hide modal
+     */
+    hideModal() {
+        const modal = document.getElementById('videoModal');
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    /**
+     * Download video
+     */
+    downloadVideo(url, filename) {
+        if (!url) {
+            this.utils.showNotification({
+                title: 'Error',
+                message: 'Download URL not found',
+                type: 'error'
+            });
+            return;
+        }
+        
+        // Show download notification
+        const downloadId = this.utils.showNotification({
+            title: 'Starting Download',
+            message: 'Preparing your download...',
+            type: 'info'
+        });
+        
+        // Trigger download
+        this.utils.downloadFile(url, this.utils.sanitizeFilename(filename));
+        
+        // Update notification
+        setTimeout(() => {
+            this.utils.removeNotification(downloadId);
+            
+            this.utils.showNotification({
+                title: 'Download Started',
+                message: 'Your download should begin shortly',
+                type: 'success'
+            });
+        }, 1000);
+    }
+
+    /**
+     * Share video
+     */
+    async shareVideo(videoId) {
+        const video = this.currentVideo?.video;
+        if (!video) return;
+        
+        const shareData = {
+            title: video.title,
+            text: `Check out this video: ${video.title}`,
+            url: `https://www.youtube.com/watch?v=${videoId}`
+        };
+        
+        const success = await this.utils.shareContent(shareData);
+        
+        if (!success) {
+            // Fallback: copy URL to clipboard
+            const url = `https://www.youtube.com/watch?v=${videoId}`;
+            if (await this.utils.copyToClipboard(url)) {
+                this.utils.showNotification({
+                    title: 'Copied',
+                    message: 'Video URL copied to clipboard',
+                    type: 'success'
+                });
+            }
+        }
+    }
+
+    /**
+     * Save search history
+     */
+    saveSearchHistory(query) {
+        let history = this.utils.storage.get('searchHistory') || [];
+        
+        // Remove if already exists
+        history = history.filter(item => item !== query);
+        
+        // Add to beginning
+        history.unshift(query);
+        
+        // Limit to 20 items
+        history = history.slice(0, 20);
+        
+        this.utils.storage.set('searchHistory', history);
+    }
+
+    /**
+     * Show legal modal
+     */
+    showLegalModal(type) {
+        const content = {
+            'Terms of Service': `
+                <h3>Terms of Service</h3>
+                <p><strong>Last Updated:</strong> ${new Date().toLocaleDateString()}</p>
+                
+                <h4>1. Acceptance of Terms</h4>
+                <p>By using Icaru Downloader, you agree to these Terms of Service.</p>
+                
+                <h4>2. Service Description</h4>
+                <p>Icaru Downloader is a web-based tool that allows users to download YouTube videos for personal use.</p>
+                
+                <h4>3. Acceptable Use</h4>
+                <p>You agree to use this service only for lawful purposes and in accordance with YouTube's Terms of Service.</p>
+                
+                <h4>4. Copyright</h4>
+                <p>Respect copyright laws. Only download content you have the right to download.</p>
+                
+                <h4>5. Disclaimer</h4>
+                <p>This service is provided "as is" without any warranties.</p>
+            `,
+            
+            'Privacy Policy': `
+                <h3>Privacy Policy</h3>
+                <p><strong>Last Updated:</strong> ${new Date().toLocaleDateString()}</p>
+                
+                <h4>1. Information We Collect</h4>
+                <p>We do not collect personal information. All processing happens in your browser.</p>
+                
+                <h4>2. Cookies</h4>
+                <p>We use only essential cookies for functionality.</p>
+                
+                <h4>3. Third-Party Services</h4>
+                <p>We interact with YouTube's public API but do not share data with third parties.</p>
+                
+                <h4>4. Data Security</h4>
+                <p>Your data never leaves your device. We don't store videos or personal information.</p>
+                
+                <h4>5. Changes to Policy</h4>
+                <p>We may update this policy. Continued use constitutes acceptance.</p>
+            `,
+            
+            'Disclaimer': `
+                <h3>Disclaimer</h3>
+                <p><strong>Last Updated:</strong> ${new Date().toLocaleDateString()}</p>
+                
+                <h4>1. Educational Purpose</h4>
+                <p>This tool is for educational purposes only. Please respect copyright laws.</p>
+                
+                <h4>2. No Warranty</h4>
+                <p>The service is provided "as is" without warranty of any kind.</p>
+                
+                <h4>3. Limitation of Liability</h4>
+                <p>We are not liable for any damages arising from use of this service.</p>
+                
+                <h4>4. YouTube Compliance</h4>
+                <p>Users must comply with YouTube's Terms of Service when using this tool.</p>
+                
+                <h4>5. Fair Use</h4>
+                <p>Download only content you have rights to or that falls under fair use.</p>
+                
+                <p class="warning-text">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Downloading copyrighted content without permission may be illegal in your country.
+                </p>
+            `
+        };
+        
+        const modal = document.getElementById('videoModal');
+        const modalBody = modal.querySelector('.modal-body');
+        
+        modalBody.innerHTML = `
+            <div class="legal-content">
+                ${content[type] || 'Content not found'}
+                
+                <div class="legal-actions">
+                    <button class="btn btn-primary modal-close">
+                        <i class="fas fa-check"></i> I Understand
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Add legal styles
+        if (!document.getElementById('legal-styles')) {
+            const style = document.createElement('style');
+            style.id = 'legal-styles';
+            style.textContent = `
+                .legal-content {
+                    max-height: 60vh;
+                    overflow-y: auto;
+                    padding-right: var(--spacing-md);
+                }
+                
+                .legal-content h3 {
+                    margin-bottom: var(--spacing-lg);
+                    color: var(--primary-color);
+                }
+                
+                .legal-content h4 {
+                    margin-top: var(--spacing-lg);
+                    margin-bottom: var(--spacing-sm);
+                    color: var(--text-primary);
+                }
+                
+                .legal-content p {
+                    margin-bottom: var(--spacing-md);
+                    line-height: 1.6;
+                }
+                
+                .warning-text {
+                    background: rgba(239, 68, 68, 0.1);
+                    border-left: 4px solid var(--danger-color);
+                    padding: var(--spacing-md);
+                    border-radius: var(--radius-sm);
+                    margin-top: var(--spacing-lg);
+                }
+                
+                .warning-text i {
+                    color: var(--danger-color);
+                    margin-right: var(--spacing-sm);
+                }
+                
+                .legal-actions {
+                    text-align: center;
+                    margin-top: var(--spacing-xl);
+                    padding-top: var(--spacing-lg);
+                    border-top: 1px solid var(--border-color);
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Add close event
+        modalBody.querySelector('.modal-close').addEventListener('click', () => {
+            this.hideModal();
+        });
+        
+        // Show modal
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    /**
+     * Initialize service worker for PWA
+     */
+    initServiceWorker() {
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered:', registration);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed:', error);
+                    });
+            });
+        }
+    }
+
+    /**
+     * Get application statistics
+     */
+    async getStats() {
+        try {
+            const response = await fetch(`${this.utils.baseUrl}/health`);
+            return await response.json();
+        } catch (error) {
+            return { status: 'offline', error: error.message };
+        }
+    }
+}
+
+// Initialize application when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Hide loading overlay
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) {
+        setTimeout(() => {
+            loadingOverlay.style.display = 'none';
+        }, 500);
+    }
+    
+    // Initialize app
+    window.icaru = new IcaruDownloader();
+    
+    // Apply fade-in animation to elements
+    const elements = document.querySelectorAll('.fade-in');
+    elements.forEach((el, index) => {
+        setTimeout(() => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
